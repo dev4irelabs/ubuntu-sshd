@@ -12,6 +12,9 @@ else
     echo "User $SSH_USERNAME created"
 fi
 
+# Disable password authentication if authorized keys are provided
+sed -i 's/PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_config
+
 # Set the authorized keys from the AUTHORIZED_KEYS environment variable (if provided)
 if [ -n "$AUTHORIZED_KEYS" ]; then
     mkdir -p /home/$SSH_USERNAME/.ssh
@@ -20,8 +23,6 @@ if [ -n "$AUTHORIZED_KEYS" ]; then
     chmod 700 /home/$SSH_USERNAME/.ssh
     chmod 600 /home/$SSH_USERNAME/.ssh/authorized_keys
     echo "Authorized keys set for user $SSH_USERNAME"
-    # Disable password authentication if authorized keys are provided
-    sed -i 's/PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_config
 fi
 
 # Apply additional SSHD configuration if provided
